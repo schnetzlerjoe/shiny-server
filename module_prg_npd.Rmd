@@ -1,0 +1,113 @@
+---
+title: "module_program_npd"
+author: "Pralhad, K"
+date: "10/6/2020"
+output: 
+  html_notebook:
+    code_folding: hide
+---
+
+#### Input Layout (Format : parameter_commodity_UI)
+
+```{r}
+input_prg_UI <- function(id) {
+  ns = NS(id)
+  
+  fluidRow(
+    column(12,
+    
+    fluidRow(
+      column(2, textInput("pn", "Part Number")),
+      column(2, textInput("rev", "Revision")),
+      column(2, textInput("req_name", "Requestor Name")),
+      column(2, textInput("req_email", "Requestor Email ID")),
+      column(2, dateInput("req_date", "Request Date")),
+      column(2, textInput("commodity", "Commodity"))
+    ),
+    
+    fluidRow(
+      column(2, textInput("pro_name", "Program Name")),
+      column(2, textInput("pro_year", "Programe Year")),
+      column(2, radioButtons("implement", "Implement", choices = c("ASAP", "Beta", "Gamma", "Urgent", "Pilot", "SOP"))),
+      column(2, textInput("title", "Title")),
+      column(2, textAreaInput("chg_descrip", "Change Description")),
+      column(2, checkboxGroupInput("reason", 
+                                   "Reason for Change",
+                                   choices = c(
+                                     "Product Design Improvement",
+                                     "Quality Improvement",
+                                     "Cost",
+                                     "Issue Resolution",
+                                     "Other"
+                                   )))),
+    fluidRow(
+      column(2,  radioButtons("impact", 
+                              "Impact to Product", 
+                              choices = c(
+                                "None",
+                                "Cost",
+                                "Performance",
+                                "Packing",
+                                "Noise",
+                                "QRD",
+                                "Emissions",
+                                "Other"))),
+      column(2, radioButtons("validation",
+                             "Validation Required",
+                             choices = c("None", "Design/Analysis", "Component test", "FLT-Performance"))), 
+      column(2, radioButtons("transfer",
+                             "Is this cost transfer initiative?",
+                             choices = c("Yes", "No"))),
+      column(2, textAreaInput("notes", "Other Notes")),
+      column(2, textInput("sup", "Supplier Name")),
+      column(2, textInput("sup_name", "Supplier Personnel Full Name"))),
+    
+    fluidRow(
+      column(2, dateInput("sup_response", "Supplier Response Date")),
+      column(2, radioButtons("agree",
+                             "Agree to Quote",
+                             choices = c("Yes", "No"))), 
+      column(2, selectInput("currency", "Part Price Currency", choices = c("$", "€", "₹", "£"))),
+      column(2, textInput("part", "Part Price Change")),
+      column(2, textInput("lead", "Lead Time Change(Weeks)")),
+      column(2, textAreaInput("sup_notes", "Remark from Supplier"))),
+    
+    fluidRow(
+      column(2, textInput("fun", "Functional Leader Name")),
+      column(2, textInput("ssm", "Strategic Sourcing Manager")))
+  ))
+}
+```
+
+```{r}
+
+input_btn_UI <- function(id){
+  ns = NS(id)
+  
+  fluidRow(
+    column(12,
+           fluidRow(column(2, actionButton("submit", "Submit", class = "btn-primary")),
+                    column(2, actionButton("modify", "Modify")))
+    )
+  )
+}
+```
+
+```{r}
+input_table_UI <- function(id){
+  ns = NS(id)
+  DT::dataTableOutput(ns("npd_table1"))
+}
+```
+
+```{r}
+program_function_1 <- function(input, output, session) {
+  
+  output$npd_table1 <- DT::renderDataTable(
+    data_npd,
+    options = list(scrollX = TRUE),
+    class = 'cell-border stripe')
+}
+```
+
+
